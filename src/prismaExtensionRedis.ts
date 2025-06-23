@@ -1,5 +1,5 @@
-import {Prisma} from '@prisma/client/extension';
-import Redis from 'iovalkey';
+import { Prisma } from "@prisma/client/extension";
+import Redis from "iovalkey";
 
 import {
   autoCacheAction,
@@ -8,28 +8,26 @@ import {
   isAutoCacheEnabled,
   isCustomCacheEnabled,
   isCustomUncacheEnabled,
-} from './cacheUncache';
-import {getAutoKeyGen, getKeyGen, getKeyPatternGen} from './cacheKey';
+} from "./cacheUncache";
+import { getAutoKeyGen, getKeyGen, getKeyPatternGen } from "./cacheKey";
 
-import type {ExtendedModel, PrismaExtensionRedisOptions} from './types';
+import type { ExtendedModel, PrismaExtensionRedisOptions } from "./types";
 
 export const PrismaExtensionRedis = (options: PrismaExtensionRedisOptions) => {
   const {
     config,
-    config: {auto, cacheKey},
-    client: redisOptions,
+    config: { auto, cacheKey },
+    client: redis,
   } = options;
 
-  const {delimiter, case: cacheCase, prefix} = cacheKey ?? {};
-
-  const redis = new Redis(redisOptions);
+  const { delimiter, case: cacheCase, prefix } = cacheKey ?? {};
 
   const getKey = getKeyGen(delimiter, cacheCase, prefix);
   const getAutoKey = getAutoKeyGen(getKey);
   const getKeyPattern = getKeyPatternGen(delimiter, cacheCase, prefix);
 
   return Prisma.defineExtension({
-    name: 'prisma-extension-redis',
+    name: "prisma-extension-redis",
     client: {
       redis,
       getKey,
@@ -42,26 +40,26 @@ export const PrismaExtensionRedis = (options: PrismaExtensionRedisOptions) => {
     query: {
       $allModels: {
         async $allOperations(options) {
-          const {args, query} = options;
+          const { args, query } = options;
 
-          if (isAutoCacheEnabled({auto, options}))
+          if (isAutoCacheEnabled({ auto, options }))
             return autoCacheAction(
               {
                 redis,
                 options,
                 config,
               },
-              getAutoKey,
+              getAutoKey
             );
 
-          if (isCustomCacheEnabled({options}))
+          if (isCustomCacheEnabled({ options }))
             return customCacheAction({
               redis,
               options,
               config,
             });
 
-          if (isCustomUncacheEnabled({options}))
+          if (isCustomUncacheEnabled({ options }))
             return customUncacheAction({
               redis,
               options,
@@ -69,7 +67,7 @@ export const PrismaExtensionRedis = (options: PrismaExtensionRedisOptions) => {
             });
 
           return {
-            result: await query({...args, cache: undefined}),
+            result: await query({ ...args, cache: undefined }),
           };
         },
       },

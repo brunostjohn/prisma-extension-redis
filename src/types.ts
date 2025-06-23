@@ -1,63 +1,63 @@
-import type {Prisma} from '@prisma/client/extension';
+import type { Prisma } from "@prisma/client/extension";
 import type {
   JsArgs,
   ModelQueryOptionsCbArgs,
   Operation,
-} from '@prisma/client/runtime/library';
-import type {Redis, RedisOptions} from 'iovalkey';
+} from "@prisma/client/runtime/library";
+import type { Cluster, Redis } from "iovalkey";
 
-import type {CacheCase} from './cacheKey';
+import type { CacheCase } from "./cacheKey";
 
 export const ALL_OPERATIONS = [
-  '$executeRaw',
-  '$executeRawUnsafe',
-  '$queryRaw',
-  '$queryRawUnsafe',
-  '$runCommandRaw',
-  'aggregate',
-  'aggregateRaw',
-  'count',
-  'create',
-  'createMany',
-  'createManyAndReturn',
-  'delete',
-  'deleteMany',
-  'findFirst',
-  'findFirstOrThrow',
-  'findMany',
-  'findRaw',
-  'findUnique',
-  'findUniqueOrThrow',
-  'groupBy',
-  'update',
-  'updateMany',
-  'upsert',
+  "$executeRaw",
+  "$executeRawUnsafe",
+  "$queryRaw",
+  "$queryRawUnsafe",
+  "$runCommandRaw",
+  "aggregate",
+  "aggregateRaw",
+  "count",
+  "create",
+  "createMany",
+  "createManyAndReturn",
+  "delete",
+  "deleteMany",
+  "findFirst",
+  "findFirstOrThrow",
+  "findMany",
+  "findRaw",
+  "findUnique",
+  "findUniqueOrThrow",
+  "groupBy",
+  "update",
+  "updateMany",
+  "upsert",
 ] as const satisfies ReadonlyArray<Operation>;
 
 export const DISABLED_OPERATIONS = [
-  '$executeRaw',
-  '$executeRawUnsafe',
-  '$queryRaw',
-  '$queryRawUnsafe',
-  '$runCommandRaw',
-  'aggregate',
-  'aggregateRaw',
-  'findRaw',
+  "$executeRaw",
+  "$executeRawUnsafe",
+  "$queryRaw",
+  "$queryRawUnsafe",
+  "$runCommandRaw",
+  "aggregate",
+  "aggregateRaw",
+  "findRaw",
 ] as const satisfies ReadonlyArray<Operation>;
 
 export type DisabledOperation = (typeof DISABLED_OPERATIONS)[number];
 
 export const AUTO_REQUIRED_ARG_OPERATIONS = [
-  'findUnique',
-  'findUniqueOrThrow',
-  'groupBy',
+  "findUnique",
+  "findUniqueOrThrow",
+  "groupBy",
 ] as const satisfies ReadonlyArray<Operation>;
 
 export const AUTO_OPTIONAL_ARG_OPERATIONS = [
-  'count',
-  'findFirst',
-  'findFirstOrThrow',
-  'findMany',
+  "count",
+  "findFirst",
+  "findFirstOrThrow",
+  "findMany",
 ] as const satisfies ReadonlyArray<Operation>;
 
 export const AUTO_OPERATIONS = [
@@ -67,16 +67,16 @@ export const AUTO_OPERATIONS = [
 export type autoOperations = (typeof AUTO_OPERATIONS)[number];
 
 export const CACHE_REQUIRED_ARG_OPERATIONS = [
-  'findUnique',
-  'findUniqueOrThrow',
-  'groupBy',
+  "findUnique",
+  "findUniqueOrThrow",
+  "groupBy",
 ] as const satisfies ReadonlyArray<Operation>;
 
 export const CACHE_OPTIONAL_ARG_OPERATIONS = [
-  'count',
-  'findFirst',
-  'findFirstOrThrow',
-  'findMany',
+  "count",
+  "findFirst",
+  "findFirstOrThrow",
+  "findMany",
 ] as const satisfies ReadonlyArray<Operation>;
 
 export const CACHE_OPERATIONS = [
@@ -85,17 +85,17 @@ export const CACHE_OPERATIONS = [
 ] as const;
 
 export const UNCACHE_REQUIRED_ARG_OPERATIONS = [
-  'create',
-  'delete',
-  'update',
-  'upsert',
+  "create",
+  "delete",
+  "update",
+  "upsert",
 ] as const satisfies ReadonlyArray<Operation>;
 
 export const UNCACHE_OPTIONAL_ARG_OPERATIONS = [
-  'createMany',
-  'createManyAndReturn',
-  'deleteMany',
-  'updateMany',
+  "createMany",
+  "createManyAndReturn",
+  "deleteMany",
+  "updateMany",
 ] as const satisfies ReadonlyArray<Operation>;
 
 export const UNCACHE_OPERATIONS = [
@@ -178,37 +178,37 @@ type UnCacheResultPromise<T, A, O extends Operation> = Promise<{
 
 type AutoRequiredArgsFunction<O extends Operation> = <T, A>(
   this: T,
-  args: Prisma.Exact<A, Prisma.Args<T, O> & PrismaAutoArgs>,
+  args: Prisma.Exact<A, Prisma.Args<T, O> & PrismaAutoArgs>
 ) => CacheResultPromise<T, A, O>;
 
 type AutoOptionalArgsFunction<O extends Operation> = <T, A>(
   this: T,
-  args?: Prisma.Exact<A, Prisma.Args<T, O> & PrismaAutoArgs>,
+  args?: Prisma.Exact<A, Prisma.Args<T, O> & PrismaAutoArgs>
 ) => CacheResultPromise<T, A, O>;
 
 type CacheRequiredArgsFunction<O extends Operation> = <T, A>(
   this: T,
-  args: Prisma.Exact<A, Prisma.Args<T, O> & PrismaCacheArgs>,
+  args: Prisma.Exact<A, Prisma.Args<T, O> & PrismaCacheArgs>
 ) => CacheResultPromise<T, A, O>;
 
 type CacheOptionalArgsFunction<O extends Operation> = <T, A>(
   this: T,
-  args?: Prisma.Exact<A, Prisma.Args<T, O> & PrismaCacheArgs>,
+  args?: Prisma.Exact<A, Prisma.Args<T, O> & PrismaCacheArgs>
 ) => CacheResultPromise<T, A, O>;
 
 type UncacheRequiredArgsFunction<O extends Operation> = <T, A>(
   this: T,
-  args: Prisma.Exact<A, Prisma.Args<T, O> & PrismaUncacheArgs>,
+  args: Prisma.Exact<A, Prisma.Args<T, O> & PrismaUncacheArgs>
 ) => UnCacheResultPromise<T, A, O>;
 
 type UncacheOptionalArgsFunction<O extends Operation> = <T, A>(
   this: T,
-  args?: Prisma.Exact<A, Prisma.Args<T, O> & PrismaUncacheArgs>,
+  args?: Prisma.Exact<A, Prisma.Args<T, O> & PrismaUncacheArgs>
 ) => UnCacheResultPromise<T, A, O>;
 
 type OperationsConfig<
   RequiredArg extends Operation[],
-  OptionalArg extends Operation[],
+  OptionalArg extends Operation[]
 > = {
   requiredArg: RequiredArg;
   optionalArg: OptionalArg;
@@ -216,19 +216,19 @@ type OperationsConfig<
 
 type ModelExtension<
   Config extends OperationsConfig<Operation[], Operation[]>,
-  M extends 'auto' | 'cache' | 'uncache',
+  M extends "auto" | "cache" | "uncache"
 > = {
-  [RO in Config['requiredArg'][number]]: M extends 'auto'
+  [RO in Config["requiredArg"][number]]: M extends "auto"
     ? AutoRequiredArgsFunction<RO>
-    : M extends 'cache'
-      ? CacheRequiredArgsFunction<RO>
-      : UncacheRequiredArgsFunction<RO>;
+    : M extends "cache"
+    ? CacheRequiredArgsFunction<RO>
+    : UncacheRequiredArgsFunction<RO>;
 } & {
-  [OO in Config['optionalArg'][number]]: M extends 'auto'
+  [OO in Config["optionalArg"][number]]: M extends "auto"
     ? AutoOptionalArgsFunction<OO>
-    : M extends 'cache'
-      ? CacheOptionalArgsFunction<OO>
-      : UncacheOptionalArgsFunction<OO>;
+    : M extends "cache"
+    ? CacheOptionalArgsFunction<OO>
+    : UncacheOptionalArgsFunction<OO>;
 };
 
 type autoConfig = {
@@ -246,11 +246,11 @@ type uncacheConfig = {
   optionalArg: (typeof UNCACHE_OPTIONAL_ARG_OPERATIONS)[number][];
 };
 
-export type ExtendedModel = ModelExtension<autoConfig, 'auto'> &
-  ModelExtension<cacheConfig, 'cache'> &
-  ModelExtension<uncacheConfig, 'uncache'>;
+export type ExtendedModel = ModelExtension<autoConfig, "auto"> &
+  ModelExtension<cacheConfig, "cache"> &
+  ModelExtension<uncacheConfig, "uncache">;
 
-export type CacheType = 'JSON' | 'STRING';
+export type CacheType = "JSON" | "STRING";
 
 export type CacheKey = {
   /**
@@ -383,14 +383,14 @@ export interface PrismaExtensionRedisOptions {
   /**
    * Redis client config (iovalkey)
    */
-  client: RedisOptions;
+  client: Redis | Cluster;
 }
 
 export type DeletePatterns = {
   /**
    * Redis client
    */
-  redis: Redis;
+  redis: Redis | Cluster;
 
   /**
    * Patterns for key deletion
@@ -407,7 +407,7 @@ export type ActionParams = {
   /**
    * Redis client
    */
-  redis: Redis;
+  redis: Redis | Cluster;
 
   /**
    * CacheConfig
@@ -442,7 +442,7 @@ export type GetDataParams = {
   stale: number;
   config: CacheConfig;
   key: string;
-  redis: Redis;
+  redis: Redis | Cluster;
   args: JsArgs;
   query: (args: JsArgs) => Promise<unknown>;
 };
@@ -463,12 +463,15 @@ export type RedisCacheResultOrError =
 export type RedisCacheCommands = Record<
   string,
   {
-    get: (redis: Redis, key: string) => Promise<RedisCacheResultOrError>;
+    get: (
+      redis: Redis | Cluster,
+      key: string
+    ) => Promise<RedisCacheResultOrError>;
     set: (
-      redis: Redis,
+      redis: Redis | Cluster,
       key: string,
       value: string,
-      ttl: number,
+      ttl: number
     ) => Promise<RedisCacheResultOrError>;
   }
 >;
